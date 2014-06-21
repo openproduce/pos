@@ -1,0 +1,445 @@
+/* Use a saner CSS box model in which widths include padding. */
+*, *:before, *:after {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  /* Disable scrolling and dragging because there's only one screen. */
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  /* Selecting label text would be accidental and annoying. */
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  background: #ccc;
+  font: 20px arial, helvetica, sans-serif;
+  color: #000;
+  cursor: default;
+}
+
+input {
+  padding: 0;
+  border: 1px solid #ccc;
+  margin: 2px 0;
+}
+
+/* Generic control styles. */
+
+.search-field {
+  display: block;
+  font: 20px arial, helvetica, sans-serif;
+  padding-left: 14px;
+  width: 100%;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 10px;
+  overflow: auto;
+  border: 1px solid #ccc;
+}
+
+/* A keyboard key. */
+.key {
+  display: inline-block;
+  background: #eee;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  padding: 2px 4px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  margin: 2px;
+  min-width: 1.5em;
+  text-align: center;
+}
+
+.selected {
+  background: #e93;
+}
+
+/* The sale and picker panes. */
+
+.main-panes {
+  display: flex;
+  width: 100%;
+  /* Leave room for the nav bar at the bottom. */
+  height: calc(100% - 24px);
+  overflow: hidden;
+}
+.pane-title {
+  margin: 0;
+  width: 100%;
+  font-size: 150%;
+  min-height: 60px;
+  padding: 10px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+/* The picker pane which the clerk uses to add items to the current sale. */
+
+.picker {
+  width: 50%;
+  height: 100%;
+  background: #fff;
+}
+.picker-title {
+  background: #ccc;
+}
+
+.picker-misc-controls {
+  padding: 10px;
+  border-bottom: 1px solid #000;
+  display: flex;
+  justify-content: space-between;
+}
+.picker-clerk-name,
+.picker-date, .picker-time {
+  white-space: nowrap; 
+}
+.picker-clerk-label {
+  flex-shrink: 0;
+}
+.picker-clerk-label, .picker-clock {
+  flex-grow: 1;
+}
+.picker-clock {
+  margin-left: 10px;
+  text-align: right;
+  overflow: hidden;
+}
+
+.picker-form {
+  padding: 10px;
+}
+.picker-value {
+  line-height: 2;
+}
+.picker-value-label {
+  display: inline-block;
+  width: 150px;
+  vertical-align: bottom;
+}
+.picker-value-field {
+  vertical-align: top;
+  display: inline-block;
+  font-size: 200%;
+  width: 4em;
+  border: 1px solid #ccc;
+  margin: 2px 0;
+  padding: 0;
+  height: 48px;
+  line-height: normal;
+  text-align: right;
+}
+
+.picker-search {
+  padding: 10px 0;
+}
+.picker-search-label {
+  display: block;
+}
+
+.picker-list {
+  height: 190px;
+}
+.picker-item {
+  padding: 5px;
+  cursor: pointer;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* The sale pane, which shows what's in the current sale. */
+
+.sale {
+  border-left: 1px solid #000;
+  width: 50%;
+  height: 100%;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+}
+.sale-title {
+  background: #000;
+  color: #fff;
+}
+
+.sale-customer {
+  background: #fff;
+  border-bottom: 1px solid #333;
+  padding: 10px;
+  min-height: 45px;
+}
+
+.sale-list {
+  height: 100%;
+  border: 0;
+}
+.sale-item {
+  padding: 5px;
+  cursor: pointer;
+}
+.sale-item:not(:last-child) {
+  border-bottom: 1px dotted #ccc;
+}
+.sale-item-desc {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.sale-item-quantity {
+  float: left;
+  color: #666;
+}
+.sale-item-price {
+  text-align: right;
+}
+
+.sale-summary {
+  width: 100%;
+  font-size: 200%;
+  background: #fff;
+  border-top: 1px solid #333;
+  padding: 10px;
+}
+.sale-total-label {
+  float:left;
+}
+.sale-total-price {
+  float:right;
+}
+
+/* Modal dialog boxes. */ 
+
+.dialogs {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  text-align: center;
+}
+.dialogs:before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+  margin-right: -0.25em;
+}
+.dialog-mask {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  opacity: .9;
+  pointer-events: none;
+  display: none;
+}
+
+.dialog {
+  max-width: 70%;
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+  border: 1px solid black;
+  background: #fff;
+  pointer-events: auto;
+  padding: 40px;
+  text-align: left;
+}
+.dialog-title {
+  margin: 0;
+  font-size: 1.25;
+}
+
+.alert-message {
+  padding-bottom: 10px;
+}
+
+.wait-message {
+  padding-bottom: 10px;
+}
+
+.payment-type-list {
+  height: 142px;
+  margin: 5px 0;
+}
+.payment-total-notax-label,
+.payment-total-label,
+.payment-tendered-label,
+.payment-change-label {
+  display: inline-block;
+  width: 120px;
+}
+.payment-amount {
+  display: inline-block;
+  width: 4em;
+  font: 20px arial, helvetica, sans-serif;
+  padding-left: 14px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+
+.payment-credit-form {
+  margin-top: 5px;
+}
+.payment-credit-form-line {
+  display: block;
+}
+.payment-credit-card {
+  width: calc(100% - 130px);
+  min-width: 200px;
+  font: 20px arial, helvetica, sans-serif;
+  display: inline-block;
+}
+.payment-credit-exp-month {
+  width: 40px;
+  padding-right: 2px;
+  font: 20px arial, helvetica, sans-serif;
+  text-align: right;
+}
+.payment-credit-exp-year {
+  width: 60px;
+  padding-right: 2px;
+  font: 20px arial, helvetica, sans-serif;
+  text-align: right;
+}
+.payment-credit-exp-part {
+  white-space: nowrap;
+}
+
+.payment-link-approval {
+  font: 20px arial, helvetica, sans-serif;
+}
+
+.customers {
+  min-width: 60%;
+}
+.customers-form {
+  padding: 5px;
+}
+.customers-list {
+  height: 190px;
+}
+.customer-list-name, .customer-list-balance {
+  display: inline-block;
+  width: 50%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+} 
+.customer-list-balance {
+  text-align: right;
+}
+
+.edit-customer-label {
+  display: block;
+}
+.edit-customer-label-text {
+  display: inline-block;
+  width: 120px;
+}
+.edit-customer-field {
+  display: inline-block;
+  width: calc(100% - 130px);
+  min-width: 200px;
+  font: 20px arial, helvetica, sans-serif;
+}
+
+.tab-history-list {
+  margin: 5px 0;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.tab-history-sale-list-item {
+  padding: 0 5px;
+  display: inline-block;
+}
+.tab-history-item-list {
+  height: 190px;
+  margin: 5px 0;
+}
+
+.clerks-form {
+  padding: 5px;
+}
+.clerks-list {
+  height: 190px;
+}
+
+.review-sales {
+  width: 60%;
+}
+.review-sales-list {
+  height: 190px;
+  margin: 5px 0;
+}
+.review-sales-item-total {
+  padding: 0 5px;
+  flex-shrink: 0;
+}
+.review-sales-item-date {
+  padding: 0 5px;
+  text-align: right;
+  width: 100%;
+}
+.review-sales-item-void,
+.review-sales-item-nonvoid {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+}
+.review-sales-item-void:before {
+  content: "✗";
+  color: red;
+  display: inline-block;
+  width: 20px;
+  flex-shrink: 0;
+}
+.review-sales-item-nonvoid:before {
+  content: " ";
+  display: inline-block;
+  width: 20px;
+  flex-shrink: 0;
+}
+
+/* Navigation bars at the bottom of the main screen and dialogs. */
+
+.nav-bar {
+  border-top: 1px solid #000;
+  background: #fff;
+  width: 100%;
+  height: 24px;
+  display: flex;
+}
+.nav-link {
+  background: #c03;
+  color: #000;
+  padding: 0 10px;
+  text-decoration: none;
+  margin-right: 10px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* hidden is last so that it takes precedence over other class selectors. */
+.hidden {
+  display: none;
+}

@@ -1,0 +1,153 @@
+The pos is split into two programs---a Javascript client used by a clerk to
+enter and review sales, and a server that does business logic and stores stuff
+in a database. The client and server use a REST API to exchange JSON objects.
+
+Objects
+
+The client silently ignores unknown fields, but checks that the fields listed
+below are present with the expected types. Undetermined values like database
+ids for new objects on the client or timestamps for events that haven't
+happened are present and set to null; these fields are marked "nullable" below.
+Decimal fields are sent as strings.
+
+These protocol objects are not 1:1 with database objects. For example, the
+CreditCard object needs to be communicated from the client to the server for
+payment processing but isn't stored in a database.
+
+// The cashier.
+Clerk {
+  int id
+  string name
+}
+
+// A store customer with a tab.
+Customer {
+  nullable int id
+  string name
+  string phone
+  string email
+  // postal is up to three lines delimited by \n.
+  string postal
+  decimal balance
+  decimal limit
+}
+
+// Something the store sells.
+Item {
+  int id
+  // Items with the description 'tab payment' or 'discount' have special UI.
+  string desc
+  decimal costPerQty
+  // If saleUnit is 'ea', the quantity input field is prepopulated with '1' so
+  // that scanning a barcode will add the item immediately.
+  string saleUnit
+  // If discontinued is true, the item won't be displayed.
+  boolean discontinued
+  string plu 
+  string barcode
+  int updatedAt
+}
+
+// A transaction in which a customer buys items.
+Sale {
+  nullable int id
+  // clerkId and customerId are just ints rather than nested objects because no
+  // displayed details of these objects are expected to change during a sale.
+  nullable int clerkId
+  nullable int customerId
+  // saleItems is an array of fully expanded SaleItem objects in the order they
+  // were added to the sale.
+  SaleItem[] saleItems
+  decimal total
+  decimal preTaxTotal
+  boolean isVoid
+  boolean isPaid
+  int startTime
+  nullable int endTime
+}
+
+// A line item in a sale.
+SaleItem {
+  nullable int id
+  // item is always an expanded Item.
+  Item item
+  decimal qty
+  // May be set by client, assumed to be ignored by server.
+  decimal subtotal
+}
+
+// A client request to pay for a sale.
+Payment {
+  int saleId
+  // method is one of the literal strings 'cash', 'credit/debit', 'tab',
+  // 'check', or 'link'.
+  string method
+  // customerId must be non-null if method is 'tab'. It may be non-null for
+  // other methods if the clerk attached a customer to the sale separately.
+  nullable int customerId
+  // creditCard is non-null if and only if method is 'credit/debit'.
+  nullable CreditCard creditCard
+  // linkInfo is non-null if and only if method is 'link'.
+  nullable LinkInfo linkInfo
+  // The customer wants a receipt if this is true.
+  boolean withReceipt
+}
+
+// Payment info from a credit card.
+CreditCard {
+  // cardNumber contains only digits. It is the PAN from a card magstripe.
+  string cardNumber
+  // customerName is non-null if it was present on the card.
+  nullable string customerName
+  // For a swipe, expYear and expMonth are two digit expiration fields from the
+  // card magstripe. Otherwise they are digits the clerk has typed.
+  string expYear
+  string expMonth
+}
+
+// Payment info from a link transaction.
+LinkInfo {
+  // Some string the clerk typed.
+  string approvalCode
+}
+
+Messages
+
+The client sends the following HTTP requests. The client and server always send
+and receive data as body JSON. Successful operations return a 2xx status code.
+Error responses may include a JSON body. When a message should be displayed to
+the clerk, the error JSON object should include a "message" string property.
+
+Clerks
+- GET /clerks.json returns all the clerks
+
+Customers
+- GET /customers.json gets all the customers.
+- POST /customers.json creates a new customer.
+- PATCH /customers/:id.json updates an existing customer.
+- GET /customers/:id/print_tab.json prints a customer's tab history.
+
+Items
+- GET /items/since/:unixtime.json gets all items updated after unixtime.
+  When :unixtime == 0 all items should be returned.
+
+Sale entry
+- POST /sales.json creates a new sale with one or more items.
+  This is usually sent when the first item is added to a sale. It may also be
+  sent if there is any kind of network or server error during sale entry. In
+  that case, the client will re-POST its current view of the sale as a new sale
+  before sending any more incremental updates.
+
+- PUT /sales/:id/set_customer/:cust_id.json sets the customer for a sale.
+- PATCH /sales/:id/add_item.json adds an item to a sale.
+- PATCH /sales/:id/remove_item/:sale_item_id.json removes an item from a sale.
+- POST /sales/:id/pay.json pays a sale.
+  This is logically a sale method because it mutates the sale (setting the paid
+  boolean).
+
+Sale review
+- GET /sales/since/:unixtime.json gets all sales ended at or after unixtime.
+- GET /sales/:id/print_receipt.json prints a receipt for a sale.
+- PUT /sales/:id/void.json voids a sale.
+- PUT /sales/:id/unvoid.json unvoids a sale.
+- GET /sales/for_customer/:id.json gets 100 most recent sales for customer.

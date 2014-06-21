@@ -1,0 +1,306 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset=utf-8>
+  <link rel="stylesheet" href="pos.css" type=text/css>
+  <title>Point of Sale</title>
+  <script src="third_party/big.js"></script>
+  <script src="log.js"></script>
+  <script src="messages.js"></script>
+  <script src="models.js"></script>
+  <script src="xhr.js"></script>
+  <script src="template.js"></script>
+  <script src="key-codes.js"></script>
+  <script src="magstripe-decode.js"></script>
+  <script src="tmpl/sale-item.js"></script>
+  <script src="tmpl/clerk-choice.js"></script>
+  <script src="tmpl/customer-choice.js"></script>
+  <script src="tmpl/picker-item.js"></script>
+  <script src="tmpl/payment-choice.js"></script>
+  <script src="tmpl/review-sales-choice.js"></script>
+  <script src="tmpl/tab-sale-choice.js"></script>
+  <script src="tmpl/tab-sale-item.js"></script>
+  <script src="views/text.js"></script>
+  <script src="views/list.js"></script>
+  <script src="views/sale.js"></script>
+  <script src="views/picker.js"></script>
+  <script src="views/dialog.js"></script>
+  <script src="views/alert-dialog.js"></script>
+  <script src="views/wait-dialog.js"></script>
+  <script src="views/list-dialog.js"></script>
+  <script src="views/dialog-mask.js"></script>
+  <script src="views/edit-customer-dialog.js"></script>
+  <script src="views/payment-dialog.js"></script>
+  <script src="views/payment-credit-dialog.js"></script>
+  <script src="views/payment-link-dialog.js"></script>
+  <script src="views/review-sales-dialog.js"></script>
+  <script src="views/tab-history-dialog.js"></script>
+  <script src="ctrl/dialog.js"></script>
+  <script src="ctrl/search-field.js"></script>
+  <script src="ctrl/list.js"></script>
+  <script src="ctrl/sale.js"></script>
+  <script src="ctrl/picker.js"></script>
+  <script src="ctrl/key.js"></script>
+  <script src="ctrl/focus-ring.js"></script>
+  <script src="ctrl/alert-dialog.js"></script>
+  <script src="ctrl/wait-dialog.js"></script>
+  <script src="ctrl/list-dialog.js"></script>
+  <script src="ctrl/clerks-dialog.js"></script>
+  <script src="ctrl/customers-dialog.js"></script>
+  <script src="ctrl/edit-customer-dialog.js"></script>
+  <script src="ctrl/change-maker.js"></script>
+  <script src="ctrl/payment-dialog.js"></script>
+  <script src="ctrl/payment-credit-dialog.js"></script>
+  <script src="ctrl/payment-link-dialog.js"></script>
+  <script src="ctrl/review-sales-dialog.js"></script>
+  <script src="ctrl/tab-history-dialog.js"></script>
+  <script src="ctrl/item-cache.js"></script>
+  <script src="ctrl/net.js"></script>
+  <script src="ctrl/input-filter.js"></script>
+  <script src="ctrl/magstripe.js"></script>
+  <script src="main.js"></script>
+</head>
+<body>
+  <div class="main-panes">
+    <!-- Pick items to add to a sale. -->
+    <div id="picker" class="picker">
+      <h1 class="pane-title picker-title">Add Items</h1>
+      <div class="picker-misc-controls">
+        <div class="picker-clerk-label">Clerk:
+          <span id="picker-clerk-name" class="picker-clerk-name">?</span>
+        </div>
+        <div class="picker-clock">
+          <span id="picker-time" class="picker-time"></span>
+          <span id="picker-date" class="picker-date"></span>
+        </div>
+      </div>
+      <form class="picker-form" autocomplete=off spellcheck=false>
+        <div class="picker-value">
+          <span class="picker-value-label">Price
+            <span id="picker-price-unit" class="picker-price-unit"></span>
+          </span>
+          <span id="picker-price" class="picker-value-field"></span>
+        </div>
+        <div class="picker-value">
+          <label for="picker-quantity" class="picker-value-label">Quantity</label>
+          <input id="picker-quantity" type="text" class="picker-value-field" tabindex="2">
+        </div>
+        <div class="picker-search">
+          <label for="picker-search-field" class="picker-search-label">Item</label>
+          <input id="picker-search-field" type="text" class="search-field" tabindex="1" autofocus>
+          <ul id="picker-list" class="list picker-list"></ul>
+        </div>
+      </form>
+    </div>
+ 
+    <!-- Show the items in a sale. -->
+    <div id="sale" class="sale">
+      <h1 class="pane-title sale-title">Sale</h1>
+      <div id="sale-customer" class="sale-customer hidden">Customer:
+        <span id="sale-customer-name" class="sale-customer-name">?</span>
+      </div>
+      <ul id="sale-list" class="list sale-list"></ul>
+      <div class="sale-summary">
+        <div class="sale-total-label">Total</div>
+        <div id="sale-total-price" class="sale-total-price"></div>
+      </div>
+    </div>
+ 
+    <!-- Modal dialogs. -->
+    <div class="dialogs">
+      <div id="dialog-mask" class="dialog-mask"></div>
+  
+      <!-- Generic message. -->
+      <div id="alert" class="dialog alert hidden">
+        <div id="alert-message" class="alert-message"></div>
+        <span id="alert-enter-prompt" class="hidden"><span class="key">Enter</span> to accept,</span>
+        <span class="key">Esc</span> to go back 
+      </div>
+
+      <!-- Waiting message. -->
+      <div id="wait" class="dialog wait hidden">
+        <div id="wait-message" class="wait-message"></div>
+      </div>
+
+      <!-- Select payment method for a sale. -->
+      <div id="payment" class="dialog payment hidden">
+        <h2 class="dialog-title">Pay Sale</h2>
+        <span class="key">Esc</span> to go back 
+        <ul id="payment-type-list" class="list payment-type-list"></ul>
+        <div>
+          <span class="payment-total-notax-label">Before tax</span>
+          <span id="payment-total-notax" class="payment-total-notax"></span>
+        </div>
+        <div>
+          <span class="payment-total-label">With tax</span>
+          <span id="payment-total" class="payment-total"></span>
+        </div>
+        <label>
+          <span class="payment-tendered-label">Tendered</span>
+          <input id="payment-amount-tendered" type="text" class="payment-amount">
+        </label>
+        <div>
+          <span class="payment-change-label">Change</span>
+          <span id="payment-change-due"></span>
+        </div>
+        <div class="nav-bar">
+          <a href="#" class="nav-link">F6 No Receipt</a>
+          <a href="#" class="nav-link">F7 Print Receipt</a>
+        </div>
+      </div>
+
+      <!-- Pay a sale with credit card. -->
+      <div id="payment-credit" class="dialog payment-credit hidden">
+        <h2 class="dialog-title">Pay with Credit/Debit</h2>
+        Swipe card or type number.
+        <span class="key">Esc</span> to go back
+        <form class="payment-credit-form" autocomplete=off spellcheck=false>
+          <label class="payment-credit-form-line">Card No.
+            <input id="payment-credit-card" class="payment-credit-card" type="text">
+          </label>
+          <div class="payment-credit-form-line">Expiration
+            <label class="payment-credit-exp-part">month
+              <input id="payment-credit-exp-month"
+                     maxlength=2
+                     class="payment-credit-exp-month"
+                     placeholder="MM"
+                     type="text">
+            </label>
+            <label class="payment-credit-exp-part">year
+              <input id="payment-credit-exp-year"
+                     maxlength=4
+                     class="payment-credit-exp-year"
+                     placeholder="YYYY"
+                     type="text">
+            </label>
+          </div>
+        </form>
+        <div class="nav-bar">
+          <a href="#" class="nav-link">F6 Save Info</a>
+        </div>
+      </div>
+
+      <!-- Pay a sale with link. -->
+      <div id="payment-link" class="dialog payment-link hidden">
+        <h2 class="dialog-title">Pay with Link</h2>
+        <span class="key">Esc</span> to go back
+        <div class="payment-link-total">Total before tax:
+          <span id="payment-link-total"></span>
+        </div>
+        <form class="payment-link-form" autocomplete=off spellcheck=false>
+          <label>Approval Code
+            <input id="payment-link-approval" class="payment-link-approval" type="text">
+          </label>
+        </form>
+        <div class="nav-bar">
+          <a href="#" class="nav-link">F6 Save Info</a>
+        </div>
+      </div>
+  
+      <!-- Select a customer. -->
+      <div id="customers" class="dialog customers hidden">
+        <h2 class="dialog-title">Select Customer</h2>
+        <span class="key">Enter</span> to accept,
+        <span class="key">Esc</span> to cancel 
+        <form class="customers-form" autocomplete=off spellcheck=false>
+          <input id="customers-search-field" type="text" class="search-field">
+          <ul id="customers-list" class="list customers-list"></ul>
+        </form>
+        <div class="nav-bar">
+          <a href="#" class="nav-link">F6 Add</a>
+          <a href="#" class="nav-link">F7 Edit</a>
+        </div>
+      </div>
+
+      <!-- Edit customer information. -->
+      <div id="edit-customer" class="dialog edit-customer hidden">
+        <h2 class="dialog-title">Edit Customer</h2>
+        <span class="key">Esc</span> to cancel 
+        <form class="edit-customer-form" autocomplete=off spellcheck=false>
+          <label class="edit-customer-label">
+            <span class="edit-customer-label-text">Name</span>
+            <input id="edit-customer-name" class="edit-customer-field" type="text">
+          </label>
+          <label class="edit-customer-label">
+            <span class="edit-customer-label-text">E-mail</span>
+            <input id="edit-customer-email" class="edit-customer-field" type="text">
+          </label>
+          <label class="edit-customer-label">
+            <span class="edit-customer-label-text">Phone</span>
+            <input id="edit-customer-phone" class="edit-customer-field" type="text">
+          </label>
+          <label class="edit-customer-label">
+            <span class="edit-customer-label-text">Postal</span>
+            <input id="edit-customer-postal1" class="edit-customer-field" type="text">
+          </label>
+          <label class="edit-customer-label">
+            <span class="edit-customer-label-text"></span>
+            <input id="edit-customer-postal2" class="edit-customer-field" type="text">
+          </label>
+          <label class="edit-customer-label">
+            <span class="edit-customer-label-text"></span>
+            <input id="edit-customer-postal3" class="edit-customer-field" type="text">
+          </label>
+          <label class="edit-customer-label">
+            <span class="edit-customer-label-text">Credit Limit</span>
+            <input id="edit-customer-credit-limit" class="edit-customer-field" type="text">
+          </label>
+        </form>
+        <span class="edit-customer-balance">
+          <span class="edit-customer-label-text">Balance</span>
+          <span id="edit-customer-balance-value" class="edit-customer-balance-value"></span>
+        </span>
+        <div class="nav-bar">
+          <a href="#" class="nav-link">F6 Save</a>
+          <a href="#" class="nav-link">F9 Tab history</a>
+        </div>
+      </div>
+
+      <!-- Review tab history. -->
+      <div id="tab-history" class="dialog tab-history hidden">
+        <h2 class="dialog-title">Tab History</h2>
+        <div><span class="key">Esc</span> to go back.</div>
+        <div>
+          <span class="key">←</span> and <span class="key">→</span> select sale,
+          <span class="key">↑</span> and <span class="key">↓</span> select items.
+        </div>
+        <ul id="tab-history-sale-list" class="list tab-history-list"></ul>
+        <ul id="tab-history-sale-item-list" class="list tab-history-item-list"></ul>
+        <div class="nav-bar">
+          <a href="#" class="nav-link">F9 Print Tab History</a>
+        </div>
+      </div>
+  
+      <!-- Select the current clerk. -->
+      <div id="clerks" class="dialog clerks hidden">
+        <h2 class="dialog-title">Select Clerk</h2>
+        <span class="key">Enter</span> to accept,
+        <span class="key">Esc</span> to cancel 
+        <form class="clerks-form" autocomplete=off spellcheck=false>
+          <input id="clerks-search-field" type="text" class="search-field">
+          <ul id="clerks-list" class="list clerks-list"></ul>
+        </form>
+      </div>
+  
+      <!-- Review past sales. -->
+      <div id="review-sales" class="dialog review-sales hidden">
+        <h2 class="dialog-title">Review Sales</h2>
+        <span class="key">Esc</span> to go back
+        <ul id="review-sales-list" class="list review-sales-list"></ul>
+        <div class="nav-bar">
+          <a href="#" class="nav-link">F6 Void/Unvoid</a>
+          <a href="#" class="nav-link">F7 Reprint Receipt</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="nav-bar">
+    <a href="#" class="nav-link">F1 Clerks</a>
+    <a href="#" class="nav-link">F2 Customers</a>
+    <a href="#" class="nav-link">F3 Sale</a>
+    <a href="#" class="nav-link">F5 Pay</a>
+    <a href="#" class="nav-link">F8 Clear</a>
+    <a href="#" class="nav-link">F9 Review</a>
+  </div>
+</body>
+</html>

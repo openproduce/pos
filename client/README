@@ -1,0 +1,11 @@
+A few external dependencies live in third_party/.
+
+- big.js for decimal arithmetic used in price display.
+- QUnit for unit testing and sinon.js for mocks.
+- nodejs and restify for the test server. To run it,
+
+    sudo apt-get install nodejs npm
+    npm install restify
+    node test-server.js
+
+- resty, a small shell script for manual testing.
