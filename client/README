@@ -1,3 +1,15 @@
+This is a cash register app for the open produce POS written in plain
+Javascript (no frameworks).
+
+It should work in any modern browser but has only been tested in Google Chrome.
+To use it, start up a test server and open index.html. You can run unit tests
+by opening test.html.
+
+The code mostly follows the model-view-controller pattern. Models live in
+models.js, views in the views/ directory and controllers in ctrl/. The
+top-level directory also contains generic utilities like magstripe decoding,
+key event and XMLHttpRequest wrappers.
+
 A few external dependencies live in third_party/.
 
 - big.js for decimal arithmetic used in price display.
