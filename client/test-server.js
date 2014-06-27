@@ -22,7 +22,7 @@ server.get('/customers.json', function(req, res, next) {
 
 server.post('/customers.json', function(req, res, next) {
   console.log('POST /customers.json');
-  var customer = JSON.parse(req.body);
+  var customer = req.body;
   console.log(customer);
   res.send(data.DB.insertOrUpdate(data.DB.customers, customer));
   return next();
@@ -65,7 +65,7 @@ server.get(/^\/items\/since\/(\d+).json/, function(req, res, next) {
 // POST /sales/:id/pay.json pays a sale.
 server.post(/^\/sales\.json/, function(req, res, next) {
   console.log('POST /sales.json');
-  var sale = JSON.parse(req.body);
+  var sale = req.body;
   console.log('request', sale);
   sale.saleItems = sale.saleItems.map(function(saleItem) {
     return data.DB.insertOrUpdate(data.DB.saleItems, saleItem);
@@ -91,9 +91,10 @@ server.put(/^\/sales\/(\d+)\/set_customer\/(\d+)\.json/, function(req, res, next
 
 server.patch(/^\/sales\/(\d+)\/add_item\.json/, function(req, res, next) {
   var saleId = parseInt(req.params[0], 10);
-  var saleItem = JSON.parse(req.body);
+  var saleItem = req.body;
   console.log('PATCH /sales/' + saleId + '/add_item.json');
   console.log('request', saleItem);
+
   var sale = data.DB.find(data.DB.sales, saleId);
   if (!sale) {
     console.log('- no such sale');
@@ -127,7 +128,7 @@ server.patch(/^\/sales\/(\d+)\/remove_item\/(\d+)\.json/, function(req, res, nex
 server.post(/^\/sales\/(\d+)\/pay.json/, function(req, res, next) {
   var saleId = parseInt(req.params[0], 10);
   console.log('POST /sales/' + saleId + '/pay.json');
-  var payment = JSON.parse(req.body);
+  var payment = req.body;
   console.log(payment);
   var sale = data.DB.find(data.DB.sales, saleId);
   if (!sale) {
