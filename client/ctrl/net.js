@@ -50,7 +50,7 @@ NetworkController.prototype.createSale = function(sale) {
             });
 };
 
-NetworkController.prototype.addItemToSale = function(sale, saleItem, version) {
+NetworkController.prototype.addItemToSale = function(sale, saleItem) {
   var requestUrl = this.serverOrigin + '/sales/' + sale.id + '/add_item.json';
   return xhr.patch(requestUrl, JSON.stringify(saleItem))
             .then(function(response) { return new Sale(response); });
