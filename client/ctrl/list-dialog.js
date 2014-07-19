@@ -15,6 +15,7 @@ function ListDialogController(args) {
 
 // esc dismisses the dialog when the user presses escape.
 ListDialogController.prototype.esc = function() {
+  this.clear();
   this.cancel();
   return true;
 };
@@ -22,6 +23,7 @@ ListDialogController.prototype.esc = function() {
 // enter accepts the current choice if any when the user presses enter.
 ListDialogController.prototype.enter = function() {
   var choice = this.listController.getSelection();
+  this.clear();
   if (choice)
     this.accept(choice);
   else
@@ -69,4 +71,9 @@ ListDialogController.prototype.hide = function() {
   this.view.searchField.blur();
   this.listController.blur();
   this.view.hide();
+};
+
+// clear clears the search field value.
+ListDialogController.prototype.clear = function() {
+  this.view.searchField.value = '';
 };
