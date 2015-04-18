@@ -3,6 +3,14 @@ var data = require('./test-data.js');
 var server = restify.createServer();
 server.use(restify.bodyParser());
 
+server.use(
+  function crossOrigin(req,res,next){
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    return next();
+  }
+);
+
 // GET /clerks.json returns all the clerks
 server.get('/clerks.json', function(req, res, next) {
   console.log('GET /clerks.json');
@@ -85,6 +93,46 @@ server.put(/^\/sales\/(\d+)\/set_customer\/(\d+)\.json/, function(req, res, next
     return next(new restify.InvalidArgumentError('no such sale ' + saleId));
   }
   sale.customerId = customerId;
+  res.send(sale);
+  return next();
+});
+
+server.put(/^\/sales\/(\d+)\/clear_customer/, function(req, res, next) {
+  var saleId = parseInt(req.params[0], 10);
+  console.log('PUT /sales/' + saleId + '/clear_customer.json');
+  var sale = data.DB.find(data.DB.sales, saleId);
+  if (!sale) {
+    console.log('- no such sale');
+    return next(new restify.InvalidArgumentError('no such sale ' + saleId));
+  }
+  sale.customerId = null;
+  res.send(sale);
+  return next();
+});
+
+server.put(/^\/sales\/(\d+)\/set_clerk\/(\d+)\.json/, function(req, res, next) {
+  var saleId = parseInt(req.params[0], 10);
+  var clerkId = parseInt(req.params[1], 10);
+  console.log('PUT /sales/' + saleId + '/set_clerk/' + clerkId + '.json');
+  var sale = data.DB.find(data.DB.sales, saleId);
+  if (!sale) {
+    console.log('- no such sale');
+    return next(new restify.InvalidArgumentError('no such sale ' + saleId));
+  }
+  sale.clerkId = clerkId;
+  res.send(sale);
+  return next();
+});
+
+server.put(/^\/sales\/(\d+)\/clear_clerk/, function(req, res, next) {
+  var saleId = parseInt(req.params[0], 10);
+  console.log('PUT /sales/' + saleId + '/clear_clerk.json');
+  var sale = data.DB.find(data.DB.sales, saleId);
+  if (!sale) {
+    console.log('- no such sale');
+    return next(new restify.InvalidArgumentError('no such sale ' + saleId));
+  }
+  sale.clerkId = null;
   res.send(sale);
   return next();
 });

@@ -139,6 +139,9 @@ Sale entry
   before sending any more incremental updates.
 
 - PUT /sales/:id/set_customer/:cust_id.json sets the customer for a sale.
+- PUT /sales/:id/clear_customer.json clears the customer for a sale.
+- PUT /sales/:id/set_clerk/:clerk_id.json sets the clerk for a sale.
+- PUT /sales/:id/clear_clerk.json clears the clerk for a sale.
 - PATCH /sales/:id/add_item.json adds an item to a sale.
 - PATCH /sales/:id/remove_item/:sale_item_id.json removes an item from a sale.
 - POST /sales/:id/pay.json pays a sale.

@@ -20,9 +20,12 @@ PickerView.prototype.reset = function() {
   this.unit.set('');
 };
 
-// setClerk sets the current clerk's name.
+// setClerk sets the current clerk's name, or clears it if clerk is null.
 PickerView.prototype.setClerk = function(clerk) {
-  this.clerk.set(clerk.name);
+  if (clerk)
+    this.clerk.set(clerk.name);
+  else
+    this.clerk.set('?');
 };
 
 // updatePick shows a new selected item.

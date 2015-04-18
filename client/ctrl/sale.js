@@ -29,23 +29,29 @@ SaleController.prototype.clear = function() {
   this.view.setCustomerName('');
   this.view.setTotal('');
   this.itemList.update([]);
+  // Note this doesn't clear the clerk field so it is sticky between sales.
 };
 
-// setClerk sets the clerk to use when creating the next new sale. It won't
-// update a sale in the middle of entry because it's usually not expected to
-// change during a sale.
+// setClerk sets the clerk for this sale. If clerk is null then instead the
+// clerk field is cleared.
 SaleController.prototype.setClerk = function(clerk) {
-  this.clerkId = clerk.id;
+  this.version++;
+  this.clerkId = clerk ? clerk.id : null;
+  this.changeServerState(function(state) {
+    return this.net.setSaleClerk(state.sale, clerk);
+  }.bind(this));
 };
 
 // setCustomer sets the customer associated with the current sale. It's called
-// when the clerk opens the customers dialog or adds a tab payment. Choosing
-// the payment type "tab" doesn't call this since sales shouldn't change once
-// payment starts.
+// when the clerk opens the customers dialog or adds a tab payment. If customer
+// is null then instead this method clears the customer field.
+//
+// Choosing the payment type "tab" doesn't call this since sales shouldn't
+// change once payment starts.
 SaleController.prototype.setCustomer = function(customer) {
   this.version++;
   this.customer = customer;
-  this.view.setCustomerName(customer.name);
+  this.view.setCustomerName(customer ? customer.name : '');
   this.changeServerState(function(state) {
     return this.net.setSaleCustomer(state.sale, customer);
   }.bind(this));

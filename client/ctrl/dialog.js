@@ -88,7 +88,7 @@ DialogController.prototype.fkey = function(n) {
 // view.
 DialogController.prototype.openTopLevelDialog = function(n) {
   if (n == 1) {
-    this.openClerksDialog().then(this.setClerk);
+    this.pickClerk();
   } else if (n == 2) {
     this.pickCustomer();
   } else if (n == 5) {
@@ -129,10 +129,19 @@ DialogController.prototype.openTopLevelDialog = function(n) {
   return true;
 };
 
+DialogController.prototype.pickClerk = function() {
+  return this.openClerksDialog()
+             .then(this.setClerk)
+             .catch(function() { this.setClerk(null); }.bind(this));
+};
+
 DialogController.prototype.pickCustomer = function() {
   return this.openCustomersDialog()
-             .then(this.saleController.setCustomer
-                       .bind(this.saleController));
+             .then(function(customer) {
+               this.saleController.setCustomer(customer);
+             }.bind(this)).catch(function() {
+               this.saleController.setCustomer(null);
+             }.bind(this));
 };
 
 // open opens the given dialog.

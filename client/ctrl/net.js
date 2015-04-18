@@ -64,8 +64,25 @@ NetworkController.prototype.removeItemFromSale = function(sale, saleItem) {
 };
 
 NetworkController.prototype.setSaleCustomer = function(sale, customer) {
-  var requestUrl = this.serverOrigin + '/sales/' + sale.id +
-      '/set_customer/' + customer.id + '.json';
+  if (customer) {
+    var requestUrl = this.serverOrigin + '/sales/' + sale.id +
+        '/set_customer/' + customer.id + '.json';
+  } else {
+    var requestUrl = this.serverOrigin + '/sales/' + sale.id +
+        '/clear_customer.json';
+  }
+  return xhr.put(requestUrl)
+            .then(function(response) { return new Sale(response); });
+};
+
+NetworkController.prototype.setSaleClerk = function(sale, clerk) {
+  if (clerk) {
+    var requestUrl = this.serverOrigin + '/sales/' + sale.id +
+        '/set_clerk/' + clerk.id + '.json';
+  } else {
+    var requestUrl = this.serverOrigin + '/sales/' + sale.id +
+        '/clear_clerk.json';
+  }
   return xhr.put(requestUrl)
             .then(function(response) { return new Sale(response); });
 };

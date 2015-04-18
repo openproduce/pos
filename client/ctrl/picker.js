@@ -22,7 +22,7 @@ function PickerController(args) {
   setInterval(this.updateClock.bind(this), 500);
 }
 
-// setClerk sets the current clerk.
+// setClerk sets the current clerk. clerk may be null to unset the clerk.
 PickerController.prototype.setClerk = function(clerk) {
   this.view.setClerk(clerk);
 };
