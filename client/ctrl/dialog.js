@@ -101,7 +101,9 @@ DialogController.prototype.openTopLevelDialog = function(n) {
         return Promise.reject(error);
       }.bind(this)).then(function(state) {
         return this.openPaymentDialog(state.sale);
-      }.bind(this)).then(this.clearSale);
+      }.bind(this)).then(this.clearSale).catch(function(error) {
+        logError(error);
+      });
     }
   } else if (n == 8) {
     if (this.saleController.hasItems()) {
@@ -317,7 +319,7 @@ DialogController.prototype.openAlert = function(text) {
     }),
     text: text,
     isPrompt: false
-  }));
+  })).catch(function() {});
 };
 
 // openPrompt shows a question with a yes or no answer.

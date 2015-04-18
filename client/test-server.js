@@ -44,7 +44,7 @@ server.patch(/^\/customers\/(\d+)\.json/, function(req, res, next) {
     console.log('- no such customer');
     return next(new restify.InvalidArgumentError('no such customer ' + customerId));
   }
-  var newCustomer = JSON.parse(req.body);
+  var newCustomer = req.body;
   console.log(newCustomer);
   res.send(data.DB.insertOrUpdate(data.DB.customers, newCustomer));
   return next();

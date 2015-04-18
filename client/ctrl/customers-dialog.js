@@ -22,7 +22,8 @@ CustomersDialogController.prototype.fkey = function(n) {
 CustomersDialogController.prototype.openEditDialog = function(customer) {
   this.blur();
   this.dialogController.openEditCustomerDialog(customer)
-      .then(this.searchController.repeat.bind(this.searchController));
+      .then(this.searchController.repeat.bind(this.searchController))
+      .catch(function() {});
   this.focus();
 };
 

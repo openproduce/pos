@@ -180,9 +180,11 @@ PaymentDialogController.prototype.promptTab = function() {
       .catch(function() {
         this.listController.focus();
         this.listController.choose(0);
+        this.customerId = null;
+        return Promise.reject('Customer deselected.');
       }.bind(this)).then(function(customer) {
         this.customerId = customer.id;
-      }.bind(this));
+      }.bind(this)).catch(function() {});
 };
 
 // promptLink prompts for a link verification code.

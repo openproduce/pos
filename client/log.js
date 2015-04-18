@@ -5,6 +5,8 @@ function assert(condition, message) {
   }
 }
 
-function logError(err) {
-  console.error(err.message);
+function logError(message) {
+  if (message) {
+    console.error(message);
+  }
 }
