@@ -55,10 +55,7 @@ PickerController.prototype.updatePick = function() {
     this.view.reset();
     return;
   }
-  var qty = '';
-  if (pick.saleUnit == 'ea' && !pick.isTabPayment() && !pick.isDiscount())
-    qty = '1';
-  this.view.updatePick(pick, qty);
+  this.view.updatePick(pick, '');
 };
 
 // tab cycles system focus between the quantity field and search field when
@@ -101,14 +98,32 @@ PickerController.prototype.enter = function() {
 
 // addItem adds an item, pick, to the current sale.
 PickerController.prototype.addItem = function(pick) {
+  // simpleScan is true when the clerk just scans a barcode without first
+  // pressing space.
+  var simpleScan = pick.hasBarcode(this.view.searchField.value);
   if (this.view.quantity.value == '') {
-    this.view.quantity.focus();
-    return;
+    if (simpleScan || pick.soldInWholeNumbers()) {
+      // Simple scans and non-special items sold by the each default to 1.
+      this.view.quantity.value = '1';
+    }
+    if (!simpleScan) {
+      // Require the clerk to explicitly vet or edit the quantity when it is
+      // set by default, except for simple barcode scans.
+      this.view.quantity.select();
+      this.view.quantity.focus();
+      return;
+    }
   }
   try {
     var qty = Big(this.view.quantity.value).round(6);
+    var isNegativeOrZero = qty.lte(Big('0'));
+    var hasFractionalPart = !qty.eq(qty.round());
+    if (isNegativeOrZero || pick.soldInWholeNumbers() && hasFractionalPart) {
+      throw new Error("Invalid quantity.");
+    }
   } catch (e) {
     this.view.quantity.focus();
+    this.view.quantity.select();
     return;
   }
   this.saleController.addItem(pick, qty);

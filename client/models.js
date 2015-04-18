@@ -34,6 +34,16 @@ Item.prototype.isDiscount = function() {
   return this.desc == 'discount';
 };
 
+// hasBarcode returns true if barcode is a barcode for this item.
+Item.prototype.hasBarcode = function(barcode) {
+  return this.barcode == barcode;
+};
+
+// soldInWholeNumbers returns true if this item is sold in whole number units.
+Item.prototype.soldInWholeNumbers = function() {
+  return this.saleUnit == 'ea' && !this.isTabPayment() && !this.isDiscount();
+};
+
 // A Clerk is a person who sells stuff.
 function Clerk(json) {
   Model.call(this, json, {

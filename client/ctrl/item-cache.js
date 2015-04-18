@@ -48,7 +48,7 @@ ItemCache.prototype.update = function(updates) {
 // SearchFieldController expects that.
 ItemCache.prototype.search = function(query) {
   if (!query) return Promise.resolve([]);
-  var normQuery = query.toLowerCase();
+  var normQuery = query.toLowerCase().trim();
   var results = [];
   for (var id in this.items) {
     var item = this.items[id];

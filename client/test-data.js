@@ -56,7 +56,15 @@ DB.items = [
    discontinued: false,
    plu: '',
    barcode: '',
-   updatedAt: 1}
+   updatedAt: 1},
+  {id: 7,
+   desc: 'random can of olives',
+   costPerQty: '10.00',
+   saleUnit: 'ea',
+   discontinued: false,
+   plu: '',
+   barcode: '021130470167',
+   updatedAt: 1},
 ];
 
 DB.clerks = [
