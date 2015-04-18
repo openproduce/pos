@@ -18,7 +18,7 @@ function Item(json) {
     'saleUnit': $string,
     'discontinued': $boolean,
     'plu': $string,
-    'barcode': $string,
+    'barcodes': $array($string),
     'updatedAt': $int
   });
 }
@@ -36,7 +36,11 @@ Item.prototype.isDiscount = function() {
 
 // hasBarcode returns true if barcode is a barcode for this item.
 Item.prototype.hasBarcode = function(barcode) {
-  return this.barcode == barcode;
+  for (var i = 0; i < this.barcodes.length; i++) {
+    if (this.barcodes[i] == barcode)
+      return true;
+  }
+  return false;
 };
 
 // soldInWholeNumbers returns true if this item is sold in whole number units.

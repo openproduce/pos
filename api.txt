@@ -44,7 +44,8 @@ Item {
   // If discontinued is true, the item won't be displayed.
   boolean discontinued
   string plu 
-  string barcode
+  // Items may have multiple barcodes because life is confusing.
+  string[] barcode
   int updatedAt
 }
 

@@ -52,7 +52,7 @@ ItemCache.prototype.search = function(query) {
   var results = [];
   for (var id in this.items) {
     var item = this.items[id];
-    if (item.plu == normQuery || item.barcode == normQuery ||
+    if (item.plu == normQuery || item.hasBarcode(normQuery) ||
         item.desc.toLowerCase().indexOf(normQuery) != -1) {
       results.push(item);
     }
