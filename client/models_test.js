@@ -28,7 +28,7 @@ test('item valid', function() {
     'saleUnit': 'truckload',
     'discontinued': false,
     'plu': '2434',
-    'barcode': '12345678901',
+    'barcodes': ['12345678901'],
     'updatedAt': 0,
     'fabulous': 'yes'
   });
@@ -38,7 +38,7 @@ test('item valid', function() {
   equal(item.saleUnit, 'truckload');
   equal(item.discontinued, false);
   equal(item.plu, '2434');
-  equal(item.barcode, '12345678901');
+  deepEqual(item.barcodes, ['12345678901']);
   equal(item.updatedAt, 0);
   ok(!('fabulous' in item));
 });
@@ -51,7 +51,7 @@ test('item missing desc', function() {
       'saleUnit': 'truckload',
       'discontinued': false,
       'plu': '2434',
-      'barcode': '12345678901',
+      'barcodes': ['12345678901'],
       'updatedAt': 0
     });
   }, 'missing property desc');
@@ -163,7 +163,7 @@ test('sale item valid', function() {
     'saleUnit': 'truckload',
     'discontinued': false,
     'plu': '2434',
-    'barcode': '12345678901',
+    'barcodes': ['12345678901'],
     'updatedAt': 0,
     'fabulous': 'yes'
   };
@@ -187,7 +187,7 @@ test('sale item bad item', function() {
       'saleUnit': 'truckload',
       'discontinued': false,
       'plu': '2434',
-      'barcode': '12345678901',
+      'barcodes': ['12345678901'],
       'updatedAt': 0
     };
     new SaleItem({
@@ -209,7 +209,7 @@ test('sale with item valid', function() {
       'saleUnit': 'truckload',
       'discontinued': false,
       'plu': '2434',
-      'barcode': '12345678901',
+      'barcodes': ['12345678901'],
       'updatedAt': 0,
       'fabulous': 'yes'
     }),
@@ -257,7 +257,7 @@ test('sale with bad sale item', function() {
           'saleUnit': 'truckload',
           'discontinued': false,
           'plu': '2434',
-          'barcode': '12345678901',
+          'barcodes': ['12345678901'],
           'updatedAt': 0,
         },
         'qty': 2,

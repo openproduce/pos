@@ -63,29 +63,29 @@ test('update installs updates', function() {
   });
   cache.items = {
     '0': new Item({'id': 0, 'desc': 'peas', 'costPerQty': '2.50', 'saleUnit': 'ea',
-      'discontinued': false, 'plu': '', 'barcode': '12345678901',
+      'discontinued': false, 'plu': '', 'barcodes': ['12345678901'],
       'updatedAt': 0}),
     '1': new Item({'id': 1, 'desc': 'carrots', 'costPerQty': '2.50', 'saleUnit': 'ea',
-      'discontinued': false, 'plu': '', 'barcode': '12345678902',
+      'discontinued': false, 'plu': '', 'barcodes': ['12345678902'],
       'updatedAt': 100}),
   };
   cache.update([
     new Item({'id': 0, 'desc': 'BETTAR peas', 'costPerQty': '2.50', 'saleUnit': 'ea',
-      'discontinued': false, 'plu': '', 'barcode': '12345678901',
+      'discontinued': false, 'plu': '', 'barcodes': ['12345678901'],
       'updatedAt': 0}),
     new Item({'id': 1, 'desc': 'carrots', 'costPerQty': '2.50', 'saleUnit': 'ea',
-      'discontinued': true, 'plu': '', 'barcode': '12345678902',
+      'discontinued': true, 'plu': '', 'barcodes': ['12345678902'],
       'updatedAt': 0}),
     new Item({'id': 2, 'desc': 'NEW carrots', 'costPerQty': '2.50', 'saleUnit': 'ea',
-      'discontinued': false, 'plu': '', 'barcode': '12345678903',
+      'discontinued': false, 'plu': '', 'barcodes': ['12345678903'],
       'updatedAt': 100}),
   ]);
   deepEqual(cache.items, {
     '0': new Item({'id': 0, 'desc': 'BETTAR peas', 'costPerQty': '2.50', 'saleUnit': 'ea',
-      'discontinued': false, 'plu': '', 'barcode': '12345678901',
+      'discontinued': false, 'plu': '', 'barcodes': ['12345678901'],
       'updatedAt': 0}),
     '2': new Item({'id': 2, 'desc': 'NEW carrots', 'costPerQty': '2.50', 'saleUnit': 'ea',
-      'discontinued': false, 'plu': '', 'barcode': '12345678903',
+      'discontinued': false, 'plu': '', 'barcodes': ['12345678903'],
       'updatedAt': 100}),
   });
   equal(cache.lastUpdateTime, 100);
@@ -98,10 +98,10 @@ test('search returns empty for empty query', function() {
   });
   cache.items = {
     '0': new Item({'id': 0, 'desc': 'guavas', 'costPerQty': '2.50', 'saleUnit': 'ea',
-      'discontinued': false, 'plu': '4299', 'barcode': '',
+      'discontinued': false, 'plu': '4299', 'barcodes': [],
       'updatedAt': 0}),
     '1': new Item({'id': 1, 'desc': 'captain vomitberries', 'costPerQty':
-      '2.50', 'saleUnit': 'ea', 'discontinued': false, 'plu': '', 'barcode': '14299429900',
+      '2.50', 'saleUnit': 'ea', 'discontinued': false, 'plu': '', 'barcodes': ['14299429900'],
       'updatedAt': 100}),
   };
   stop();
@@ -118,17 +118,17 @@ test('search finds plu', function() {
   });
   cache.items = {
     '0': new Item({'id': 0, 'desc': 'guavas', 'costPerQty': '2.50', 'saleUnit': 'ea',
-      'discontinued': false, 'plu': '4299', 'barcode': '',
+      'discontinued': false, 'plu': '4299', 'barcodes': [],
       'updatedAt': 0}),
     '1': new Item({'id': 1, 'desc': 'captain vomitberries', 'costPerQty':
-      '2.50', 'saleUnit': 'ea', 'discontinued': false, 'plu': '', 'barcode': '14299429900',
+      '2.50', 'saleUnit': 'ea', 'discontinued': false, 'plu': '', 'barcodes': ['14299429900'],
       'updatedAt': 100}),
   };
   stop();
   cache.search('4299').then(function(results) {
     deepEqual(results, [
       new Item({'id': 0, 'desc': 'guavas', 'costPerQty': '2.50', 'saleUnit': 'ea',
-        'discontinued': false, 'plu': '4299', 'barcode': '',
+        'discontinued': false, 'plu': '4299', 'barcodes': [],
         'updatedAt': 0}),
     ]);
     start();
@@ -142,17 +142,17 @@ test('search finds barcode', function() {
   });
   cache.items = {
     '0': new Item({'id': 0, 'desc': 'peas', 'costPerQty': '2.50', 'saleUnit': 'ea',
-      'discontinued': false, 'plu': '', 'barcode': '123456789020',
+      'discontinued': false, 'plu': '', 'barcodes': ['123456789020'],
       'updatedAt': 0}),
     '1': new Item({'id': 1, 'desc': 'carrots', 'costPerQty': '2.50', 'saleUnit': 'ea',
-      'discontinued': false, 'plu': '', 'barcode': '12345678902',
+      'discontinued': false, 'plu': '', 'barcodes': ['12345678902'],
       'updatedAt': 100}),
   };
   stop();
   cache.search('12345678902').then(function(results) {
     deepEqual(results, [
       new Item({'id': 1, 'desc': 'carrots', 'costPerQty': '2.50', 'saleUnit': 'ea',
-          'discontinued': false, 'plu': '', 'barcode': '12345678902',
+          'discontinued': false, 'plu': '', 'barcodes': ['12345678902'],
           'updatedAt': 100})
     ]);
     start();
@@ -166,13 +166,13 @@ test('search finds case-insensitive substring match', function() {
   });
   cache.items = {
     '0': new Item({'id': 0, 'desc': 'peas', 'costPerQty': '2.50', 'saleUnit': 'ea',
-      'discontinued': false, 'plu': '', 'barcode': '',
+      'discontinued': false, 'plu': '', 'barcodes': [],
       'updatedAt': 0}),
     '1': new Item({'id': 0, 'desc': 'persimmons', 'costPerQty': '2.50', 'saleUnit': 'ea',
-      'discontinued': false, 'plu': '', 'barcode': '',
+      'discontinued': false, 'plu': '', 'barcodes': [],
       'updatedAt': 0}),
     '2': new Item({'id': 1, 'desc': 'carrots', 'costPerQty': '2.50', 'saleUnit': 'ea',
-      'discontinued': false, 'plu': '', 'barcode': '',
+      'discontinued': false, 'plu': '', 'barcodes': [],
       'updatedAt': 100}),
   };
   stop();
@@ -182,10 +182,10 @@ test('search finds case-insensitive substring match', function() {
     });
     deepEqual(results, [
       new Item({'id': 0, 'desc': 'peas', 'costPerQty': '2.50', 'saleUnit': 'ea',
-        'discontinued': false, 'plu': '', 'barcode': '',
+        'discontinued': false, 'plu': '', 'barcodes': [],
         'updatedAt': 0}),
       new Item({'id': 0, 'desc': 'persimmons', 'costPerQty': '2.50', 'saleUnit': 'ea',
-        'discontinued': false, 'plu': '', 'barcode': '',
+        'discontinued': false, 'plu': '', 'barcodes': [],
         'updatedAt': 0}),
     ]);
     start();
