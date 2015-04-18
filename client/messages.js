@@ -14,5 +14,6 @@ var Messages = {
   ERROR_GETTING_TAB: 'Error getting tab history.',
   ERROR_VOIDING: 'Error changing void status.',
   ERROR_PRINTING: 'Error printing receipt.',
-  ERROR_LIST: 'Error getting list from server.'
+  ERROR_LIST: 'Error getting list from server.',
+  ERROR_NEED_TEXT: 'Please type at least one letter of name.'
 };

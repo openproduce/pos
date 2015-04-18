@@ -18,6 +18,10 @@ SearchFieldController.prototype.unbind = function() {
   this.inputField.removeEventListener('keydown', this.keydownListener);
 };
 
+SearchFieldController.prototype.hasEmptySearch = function() {
+  return !this.inputField.value;
+};
+
 // keydown triggers a new search.
 SearchFieldController.prototype.keydown = function() {
   setTimeout(this.search.bind(this), 0);

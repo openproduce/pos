@@ -2,6 +2,7 @@
 // It expects a view with a list and searchField child, and a search method.
 function ListDialogController(args) {
   this.view = args.view;
+  this.requireText = args.requireText;
   this.dialogController = args.dialogController;
   this.listController = new ListController({view: args.view.list});
   this.searchController = new SearchFieldController({
@@ -22,6 +23,11 @@ ListDialogController.prototype.esc = function() {
 
 // enter accepts the current choice if any when the user presses enter.
 ListDialogController.prototype.enter = function() {
+  if (this.requireText && this.searchController.hasEmptySearch()) {
+    // To prevent selection errors require some text to be entered first.
+    this.dialogController.openAlert(Messages.ERROR_NEED_TEXT);
+    return false;
+  }
   var choice = this.listController.getSelection();
   this.clear();
   if (choice)

@@ -1,6 +1,7 @@
 // CustomersDialogController shows a list of customers.
 // It inherits most functionality from ListDialogController.
 function CustomersDialogController(args) {
+  args.requireText = true;
   ListDialogController.call(this, args);
   this.dialogController = args.dialogController;
 }
