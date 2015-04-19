@@ -8,7 +8,8 @@ The client silently ignores unknown fields, but checks that the fields listed
 below are present with the expected types. Undetermined values like database
 ids for new objects on the client or timestamps for events that haven't
 happened are present and set to null; these fields are marked "nullable" below.
-Decimal fields are sent as strings.
+ids are strings to accomodate non-30-year-old databases that use UUIDs instead
+of integer table keys. Decimal fields are sent as strings.
 
 These protocol objects are not 1:1 with database objects. For example, the
 CreditCard object needs to be communicated from the client to the server for
@@ -16,13 +17,13 @@ payment processing but isn't stored in a database.
 
 // The cashier.
 Clerk {
-  int id
+  string id
   string name
 }
 
 // A store customer with a tab.
 Customer {
-  nullable int id
+  nullable string id
   string name
   string phone
   string email
@@ -34,7 +35,7 @@ Customer {
 
 // Something the store sells.
 Item {
-  int id
+  string id
   // Items with the description 'tab payment' or 'discount' have special UI.
   string desc
   decimal costPerQty
@@ -51,11 +52,11 @@ Item {
 
 // A transaction in which a customer buys items.
 Sale {
-  nullable int id
-  // clerkId and customerId are just ints rather than nested objects because no
-  // displayed details of these objects are expected to change during a sale.
-  nullable int clerkId
-  nullable int customerId
+  nullable string id
+  // clerkId and customerId are just strings rather than nested objects because
+  // no fields of these objects are expected to change during a sale.
+  nullable string clerkId
+  nullable string customerId
   // saleItems is an array of fully expanded SaleItem objects in the order they
   // were added to the sale.
   SaleItem[] saleItems
@@ -69,7 +70,7 @@ Sale {
 
 // A line item in a sale.
 SaleItem {
-  nullable int id
+  nullable string id
   // item is always an expanded Item.
   Item item
   decimal qty
@@ -79,13 +80,13 @@ SaleItem {
 
 // A client request to pay for a sale.
 Payment {
-  int saleId
+  string saleId
   // method is one of the literal strings 'cash', 'credit/debit', 'tab',
   // 'check', or 'link'.
   string method
   // customerId must be non-null if method is 'tab'. It may be non-null for
   // other methods if the clerk attached a customer to the sale separately.
-  nullable int customerId
+  nullable string customerId
   // creditCard is non-null if and only if method is 'credit/debit'.
   nullable CreditCard creditCard
   // linkInfo is non-null if and only if method is 'link'.

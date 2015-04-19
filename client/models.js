@@ -12,7 +12,7 @@ function Model(json, spec) {
 // An Item is something the store sells.
 function Item(json) {
   Model.call(this, json, {
-    'id': $int,
+    'id': $string,
     'desc': $string,
     'costPerQty': $decimal,
     'saleUnit': $string,
@@ -51,7 +51,7 @@ Item.prototype.soldInWholeNumbers = function() {
 // A Clerk is a person who sells stuff.
 function Clerk(json) {
   Model.call(this, json, {
-    'id': $nullable($int),
+    'id': $nullable($string),
     'name': $string
   });
 }
@@ -60,7 +60,7 @@ Clerk.prototype = Object.create(Model.prototype);
 // A Customer is a person who buys stuff.
 function Customer(json) {
   Model.call(this, json, {
-    'id': $nullable($int),
+    'id': $nullable($string),
     'name': $string,
     'phone': $string,
     'email': $string,
@@ -74,9 +74,9 @@ Customer.prototype = Object.create(Model.prototype);
 // A Sale is a transaction where someone gives the store money for stuff.
 function Sale(json) {
   Model.call(this, json, {
-    'id': $nullable($int),
-    'clerkId': $nullable($int),
-    'customerId': $nullable($int),
+    'id': $nullable($string),
+    'clerkId': $nullable($string),
+    'customerId': $nullable($string),
     'saleItems': $array($model(SaleItem)),
     'total': $decimal,
     'preTaxTotal': $decimal,
@@ -91,7 +91,7 @@ Sale.prototype = Object.create(Model.prototype);
 // A SaleItem is a line item in a sale.
 function SaleItem(json) {
   Model.call(this, json, {
-    'id': $nullable($int),
+    'id': $nullable($string),
     'item': $model(Item),
     'qty': $decimal,
     'subtotal': $decimal
@@ -121,9 +121,9 @@ LinkInfo.prototype = Object.create(Model.prototype);
 // A Payment is a request to pay for a sale.
 function Payment(json) {
   Model.call(this, json, {
-    'saleId': $int,
+    'saleId': $string,
     'method': $string,
-    'customerId': $nullable($int),
+    'customerId': $nullable($string),
     'creditCard': $nullable($model(CreditCard)),
     'linkInfo': $nullable($model(LinkInfo)),
     'withReceipt': $boolean
