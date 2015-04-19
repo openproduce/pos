@@ -4,10 +4,10 @@ from webapp import app
 def list_or_add():
   return 'TODO'
 
-@app.route('/customers/<int:customer_id>.json', methods=['PATCH'])
+@app.route('/customers/<customer_id>.json', methods=['PATCH'])
 def edit(customer_id):
   return 'TODO'
 
-@app.route('/customers/<int:customer_id>/print_tab.json')
+@app.route('/customers/<customer_id>/print_tab.json')
 def print_tab(customer_id):
   return 'TODO'

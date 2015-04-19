@@ -15,9 +15,9 @@ class TestCustomers(unittest.TestCase):
     self.assertEqual(rv.status_code, 200)
 
   def test_update(self):
-    rv = self.client.patch('/customers/42.json')
+    rv = self.client.patch('/customers/30d80fad-7a76-4cf6-a421-7771ef8a60ec.json')
     self.assertEqual(rv.status_code, 200)
 
   def test_print_tab(self):
-    rv = self.client.get('/customers/42/print_tab.json')
+    rv = self.client.get('/customers/30d80fad-7a76-4cf6-a421-7771ef8a60ec/print_tab.json')
     self.assertEqual(rv.status_code, 200)
