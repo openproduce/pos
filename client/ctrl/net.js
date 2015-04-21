@@ -25,8 +25,7 @@ NetworkController.prototype.searchClerks = function(query) {
   };
   return xhr.get(this.serverOrigin + '/clerks.json')
             .then(parseModelArray.bind(undefined, Clerk))
-            .then(search)
-            .catch(logError);
+            .then(search);
 };
 
 // searchCustomers returns a promise for customer models that match a query.
@@ -38,8 +37,7 @@ NetworkController.prototype.searchCustomers = function(query) {
   };
   return xhr.get(this.serverOrigin + '/customers.json')
             .then(parseModelArray.bind(undefined, Customer))
-            .then(search)
-            .catch(logError);
+            .then(search);
 };
 
 NetworkController.prototype.createSale = function(sale) {

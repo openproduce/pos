@@ -39,10 +39,10 @@ xhr.request = function(method, url, bodyJson, opt_timeout) {
       }
     };
     req.ontimeout = function() {
-      reject(Error("Network timeout"), {});
+      reject(new Error('Network timeout'));
     }
     req.onerror = function() {
-      reject(Error('Network error'), {});
+      reject(new Error('Network error'));
     };
     req.send(bodyJson);
   });

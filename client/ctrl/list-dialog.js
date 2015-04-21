@@ -50,17 +50,21 @@ ListDialogController.prototype.down = function() {
 // open opens and shows the dialog box.
 // Returns a promise resolved with choice or rejected if cancelled.
 ListDialogController.prototype.open = function() {
-  this.show();
   var search = this.searchController.search('');
-  this.dialogController.await(search, 300, Messages.WAIT_FOR_SERVER)
-      .catch(function(error) {
-    this.dialogController.openAlert(error.display || Messages.ERROR_LIST);
-    return Promise.reject(error);
-  }.bind(this));
-  return new Promise(function(resolve, reject) {
+  var dialogPromise = new Promise(function(resolve, reject) {
     this.accept = resolve;
     this.cancel = reject;
   }.bind(this));
+  this.dialogController.await(search, 300, Messages.WAIT_FOR_SERVER)
+      .then(function() { this.show(); }.bind(this))
+      .catch(function(error) {
+    var close = function() { this.dialogController.close(); }.bind(this);
+    this.dialogController.openAlert(error.display || Messages.ERROR_LIST)
+      .then(close, close);
+    dialogPromise.reject(error);
+    return Promise.reject(error);
+  }.bind(this));
+  return dialogPromise;
 };
 
 // show shows the dialog box.
