@@ -118,11 +118,17 @@ DB.saleItems = [
   {id: '29c9c123-e4a1-460a-a388-6113641fc584',
    saleId: 'f4471c9c-1c2d-4898-88ec-3e79653bc6cf',
    itemId: '0f95f07c-e7f1-4fb0-94f5-66301460c675',
+   desc: 'pasta',
+   costPerQty: '3.50',
+   saleUnit: 'ea',
    qty: '1',
    subtotal: '3.50'},
   {id: '98b1e205-a9bd-4e6f-bf28-608d6a05a105',
    saleId: 'f4471c9c-1c2d-4898-88ec-3e79653bc6cf',
    itemId: '7c65346c-d013-4a96-85ce-24c4990ce5d5',
+   desc: 'black beans',
+   costPerQty: '1.50',
+   saleUnit: 'ea',
    qty: '1',
    subtotal: '1.50'}
 ];
