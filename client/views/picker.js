@@ -30,7 +30,7 @@ PickerView.prototype.setClerk = function(clerk) {
 
 // updatePick shows a new selected item.
 PickerView.prototype.updatePick = function(item, qty) {
-  this.price.value = item.costPerQty;
+  this.price.value = item.costPerQty.toFixed(2);
   this.unit.set(item.saleUnit);
   this.quantity.value = qty;
 };
