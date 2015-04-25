@@ -14,6 +14,11 @@ function PickerController(args) {
     allowNumbers: true,
     allowDot: true
   }).bind();
+  new InputFilter({
+    dom: this.view.price,
+    allowNumbers: true,
+    allowDot: true
+  }).bind();
   this.pickCustomer = args.pickCustomer;
 
   this.itemListController.focus();
@@ -126,7 +131,8 @@ PickerController.prototype.addItem = function(pick) {
     this.view.quantity.select();
     return;
   }
-  this.saleController.addItem(pick, qty);
+  var price = this.view.price.value;
+  this.saleController.addItem(pick, qty, price);
   this.reset();
 };
 
@@ -185,6 +191,9 @@ PickerController.prototype.up = function() {
         this.itemListController.getSelection()) {
       this.view.quantity.focus();
       this.view.quantity.select();
+    } else if (document.activeElement == this.view.quantity) {
+      this.view.price.focus();
+      this.view.price.select();
     }
   }
 };
@@ -197,5 +206,7 @@ PickerController.prototype.down = function() {
     this.updatePick();
   } else if (document.activeElement == this.view.quantity) {
     this.view.searchField.focus();
+  } else if (document.activeElement == this.view.price) {
+    this.view.quantity.focus();
   }
 };

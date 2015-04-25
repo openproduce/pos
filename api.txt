@@ -71,9 +71,12 @@ Sale {
 // A line item in a sale.
 SaleItem {
   nullable string id
-  // item is always an expanded Item.
-  Item item
+  string itemId
+  string desc
+  string saleUnit
   decimal qty
+  // The clerk can manually override the price in case it's wrong.
+  decimal costPerQty
   // May be set by client, assumed to be ignored by server.
   decimal subtotal
 }

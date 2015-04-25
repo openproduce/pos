@@ -92,7 +92,10 @@ Sale.prototype = Object.create(Model.prototype);
 function SaleItem(json) {
   Model.call(this, json, {
     'id': $nullable($string),
-    'item': $model(Item),
+    'itemId': $string,
+    'desc': $string,
+    'costPerQty': $decimal,
+    'saleUnit': $string,
     'qty': $decimal,
     'subtotal': $decimal
   });

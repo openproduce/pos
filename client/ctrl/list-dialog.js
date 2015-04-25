@@ -61,7 +61,6 @@ ListDialogController.prototype.open = function() {
     var close = function() { this.dialogController.close(); }.bind(this);
     this.dialogController.openAlert(error.display || Messages.ERROR_LIST)
       .then(close, close);
-    dialogPromise.reject(error);
     return Promise.reject(error);
   }.bind(this));
   return dialogPromise;

@@ -3,7 +3,7 @@ function PickerView(args) {
   this.clerk = new TextView(args.clerk);
   this.time = new TextView(args.time);
   this.date = new TextView(args.date);
-  this.price = new TextView(args.price);
+  this.price = args.price;
   this.unit = new TextView(args.unit);
   this.quantity = args.quantity;
   this.searchField = args.searchField;
@@ -16,7 +16,7 @@ function PickerView(args) {
 // reset restores the view to its default state, but not the search field.
 PickerView.prototype.reset = function() {
   this.quantity.value = '';
-  this.price.set('');
+  this.price.value = '';
   this.unit.set('');
 };
 
@@ -30,7 +30,7 @@ PickerView.prototype.setClerk = function(clerk) {
 
 // updatePick shows a new selected item.
 PickerView.prototype.updatePick = function(item, qty) {
-  this.price.set(item.costPerQty);
+  this.price.value = item.costPerQty;
   this.unit.set(item.saleUnit);
   this.quantity.value = qty;
 };

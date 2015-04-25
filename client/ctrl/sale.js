@@ -59,11 +59,19 @@ SaleController.prototype.setCustomer = function(customer) {
 
 // addItem adds an amount qty of an inventory item to the current sale.
 // It updates views, tells the server, and then adjusts views if necessary
-// after the server responds (for example if the price of the item changed.)
-SaleController.prototype.addItem = function(item, qty) {
+// after the server responds.
+SaleController.prototype.addItem = function(item, qty, costPerQty) {
   this.version++;
-  var subtotal = qty.times(item.costPerQty).toFixed(2);
-  var saleItem = new SaleItem({id: null, item: item, qty: qty, subtotal: subtotal});
+  var subtotal = qty.times(costPerQty).toFixed(2);
+  var saleItem = new SaleItem({
+    id: null,
+    itemId: item.id,
+    desc: item.desc,
+    costPerQty: costPerQty,
+    saleUnit: item.saleUnit,
+    qty: qty,
+    subtotal: subtotal
+  });
   this.itemList.add(saleItem);
   this.view.setTotal(this.guessTotal());
   this.changeServerState(function(state) {

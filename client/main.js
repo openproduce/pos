@@ -1,6 +1,6 @@
 window.addEventListener('DOMContentLoaded', function() {
   var netController = new NetworkController({
-    serverOrigin: '//localhost:5000'
+    serverOrigin: '//localhost:8001'
   });
   var saleController = new SaleController({
     view: new SaleView({

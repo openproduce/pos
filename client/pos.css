@@ -142,6 +142,10 @@ input {
   line-height: normal;
   text-align: right;
 }
+.picker-price:focus {
+  color: red;
+  outline: 1px solid red;
+}
 
 .picker-search {
   padding: 10px 0;
